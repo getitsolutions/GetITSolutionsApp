@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1F3A">
+<title>Get IT Solutions</title>
+<style>
+:root{--navy:#0B1F3A;--navy2:#132d52;--cyan:#22C3EE;--green:#25D366;--bg:#F3F6FB;--card:#fff;--ink:#0B1F3A;--mute:#5B6B82;--line:#E2E8F1}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px}
+header{position:sticky;top:0;z-index:5;background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+header b{font-size:17px;letter-spacing:.2px}header small{display:block;color:#9fb3cf;font-size:11px;font-weight:500}
+.logo{width:38px;height:38px;flex:none}
+.logo .trace{stroke-dasharray:6 4;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.hdr-btn{margin-left:auto;background:var(--green);color:#fff;border:0;border-radius:20px;padding:8px 12px;font-weight:600;font-size:13px;text-decoration:none}
+main{padding:16px 16px 96px}
+.page{display:none;animation:in .25s ease}.page.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.hero{background:linear-gradient(135deg,var(--navy),#1a4a85);color:#fff;border-radius:18px;padding:20px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;border:2px dashed rgba(34,195,238,.35)}
+.tag{display:inline-block;background:rgba(34,195,238,.18);color:#8be3f7;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600}
+.hero h1{font-size:23px;line-height:1.25;margin:12px 0 8px}.hero h1 span{color:var(--cyan)}
+.hero p{margin:0 0 16px;color:#c9d6ea;font-size:14px;line-height:1.5}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.btn{display:block;text-align:center;border:0;border-radius:12px;padding:13px;font-weight:600;font-size:14px;text-decoration:none;cursor:pointer;font-family:inherit}
+.b1{background:var(--cyan);color:var(--navy)}.b2{background:rgba(255,255,255,.12);color:#fff}
+.bw{background:var(--green);color:#fff}.bn{background:var(--navy);color:#fff}.bo{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
+h2{font-size:18px;margin:22px 0 4px}.sub{color:var(--mute);font-size:13px;margin:0 0 12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:var(--card);border-radius:14px;padding:12px 8px;text-align:center;border:1px solid var(--line)}
+.stat b{display:block;font-size:18px;color:#1a4a85}.stat span{font-size:11px;color:var(--mute)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card .ic{width:38px;height:38px;border-radius:10px;background:#E6F7FC;display:grid;place-items:center;font-size:20px;margin-bottom:8px}
+.card h3{font-size:14px;margin:0 0 4px}.card p{font-size:12px;color:var(--mute);margin:0;line-height:1.45}
+.list .card{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}.list .card .ic{flex:none;margin:0}
+.gem{display:flex;gap:12px;align-items:center;background:#FFF7E6;border:1px solid #F5D9A0;border-radius:14px;padding:14px;margin-top:14px}
+.gem b{font-size:14px}.gem small{display:block;color:#7a5b1d;font-size:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+.chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--mute)}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.brand{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:var(--ink)}
+.brand b{font-size:14px}.brand small{display:block;color:var(--mute);font-size:12px}.brand i{font-style:normal;font-size:10px;font-weight:700;color:#1a4a85;background:#EAF1FB;border-radius:6px;padding:3px 6px}
+label{display:block;font-size:12px;font-weight:600;margin:12px 0 5px;color:var(--mute)}
+input,select,textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan)}
+.ok{display:none;text-align:center}.ok.on{display:block}
+.case{font-size:26px;font-weight:800;letter-spacing:1px;color:#1a4a85;background:#EAF1FB;border-radius:12px;padding:14px;margin:10px 0}
+.hist .card{margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.dir{display:flex;gap:14px;align-items:center}
+.av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#1a4a85,var(--cyan));color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px;flex:none}
+.pill{display:inline-block;font-size:11px;background:#EAF1FB;color:#1a4a85;border-radius:6px;padding:3px 7px;margin:4px 4px 0 0;font-weight:600}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:9}
+nav button{flex:1;background:0;border:0;color:#8a98ad;font-size:11px;font-weight:600;padding:4px 0;font-family:inherit}
+nav button svg{display:block;margin:0 auto 3px;width:22px;height:22px}
+nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+    <rect width="48" height="48" rx="12" fill="#132d52"/>
+    <path d="M34 15a13 13 0 1 0 2 13H25" fill="none" stroke="#22C3EE" stroke-width="4" stroke-linecap="round"/>
+    <path class="trace" d="M25 28v6M36 28h5" stroke="#8be3f7" stroke-width="2" fill="none"/>
+    <circle cx="25" cy="35" r="2.4" fill="#8be3f7"/><circle cx="41" cy="28" r="2.4" fill="#8be3f7"/><circle cx="34" cy="15" r="2.4" fill="#fff"/>
+  </svg>
+  <div><b>Get IT Solutions</b><small>IT · Networking · Cybersecurity</small></div>
+  <a class="hdr-btn" href="tel:+918299087647">Call</a>
+</header>
+
+<main>
+<!-- HOME -->
+<section class="page on" id="home">
+  <div class="hero">
+    <span class="tag">24/7 IT Support Desk</span>
+    <h1>Future-ready <span id="rot">Cybersecurity</span> for your organisation.</h1>
+    <p>Lucknow-based IT company that designs, supplies, installs and supports complete IT infrastructure for government, defence, education and enterprise.</p>
+    <div class="row"><button class="btn b1" onclick="go('support')">Raise ticket</button><button class="btn b2" onclick="go('contact')">Free consultation</button></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>17+</b><span>Years in IT</span></div>
+    <div class="stat"><b>20+</b><span>Brands</span></div>
+    <div class="stat"><b>24/7</b><span>Support</span></div>
+  </div>
+  <a class="gem" href="https://gem.gov.in" style="text-decoration:none;color:inherit">
+    <div style="font-size:26px">🏛️</div>
+    <div><b>Registered Seller on GeM</b><small>All our products are available on the GeM portal · Seller ID 3C6B200001272855</small></div>
+  </a>
+  <h2>Our services</h2><p class="sub">Smart solutions to secure, streamline & scale.</p>
+  <div class="grid" id="svcMini"></div>
+  <h2>Trusted by</h2><p class="sub">Government, defence, power, education & enterprise.</p>
+  <div class="chips" style="flex-wrap:wrap">
+    <span class="chip">NIC</span><span class="chip">IIITs</span><span class="chip">IIM</span><span class="chip">AIIMS</span><span class="chip">POWERGRID</span><span class="chip">RailTel</span><span class="chip">TCIL</span><span class="chip">CRPF</span><span class="chip">PCDA</span><span class="chip">UPPCL</span><span class="chip">BEL</span><span class="chip">L&amp;T</span><span class="chip">Adani Group</span><span class="chip">HBTU</span><span class="chip">Lucknow University</span>
+  </div>
+  <h2>Our founder</h2>
+  <div class="card dir">
+    <div class="av">YS</div>
+    <div><b>Yogendra Singh</b><div style="font-size:12px;color:var(--mute)">Founder · 17+ years in IT · BCA & MCA, Lucknow University</div>
+      <span class="pill">CCNP</span><span class="pill">CCNA</span><span class="pill">MCITP</span><span class="pill">CCNSP</span></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="page" id="services">
+  <h2 style="margin-top:4px">Services & solutions</h2><p class="sub">Tap any service to get a quote.</p>
+  <div class="list" id="svcList"></div>
+</section>
+
+<!-- BRANDS -->
+<section class="page" id="brands">
+  <h2 style="margin-top:4px">Brands we sell & support</h2><p class="sub">Genuine products from the world’s leading technology brands.</p>
+  <div class="chips" id="cats"></div>
+  <div id="brandList"></div>
+</section>
+
+<!-- SUPPORT -->
+<section class="page" id="support">
+  <div id="tForm">
+    <h2 style="margin-top:4px">Raise a support ticket</h2>
+    <p class="sub">Get a case ID instantly. Your ticket goes to our support team on WhatsApp.</p>
+    <form id="ticket" class="card">
+      <label>Full name *</label><input name="name" required autocomplete="name">
+      <label>Organisation</label><input name="org">
+      <label>WhatsApp number *</label><input name="phone" type="tel" required pattern="[0-9+ ]{10,15}" inputmode="tel">
+      <label>Email</label><input name="email" type="email">
+      <label>Issue type *</label>
+      <select name="issue" required><option value="">Select…</option><option>Internet / Network down</option><option>Wi‑Fi (Quantum Networks)</option><option>Firewall / Security (Sophos)</option><option>Virus / Ransomware alert</option><option>Server / Storage</option><option>Backup / Data recovery</option><option>CCTV / Surveillance</option><option>Email / Microsoft 365</option><option>Desktop / Laptop / Printer</option><option>Software / Application</option><option>Other</option></select>
+      <label>Priority</label>
+      <select name="priority"><option>Normal</option><option>High – work affected</option><option>Critical – business stopped</option></select>
+      <label>Site / location</label><input name="site">
+      <label>Describe the problem *</label><textarea name="desc" rows="4" required></textarea>
+      <button class="btn bn" style="width:100%;margin-top:16px" type="submit">Create ticket & get case ID</button>
+    </form>
+  </div>
+  <div class="ok card" id="tOk">
+    <div style="font-size:40px">✅</div>
+    <h2 style="margin:6px 0 0">Ticket created</h2>
+    <p class="sub" style="margin:4px 0 0">Your case ID is</p>
+    <div class="case" id="caseId"></div>
+    <p style="font-size:13px;color:var(--mute);margin:0 0 14px">Press <b>Send</b> on WhatsApp so our team receives it with all details.</p>
+    <a class="btn bw" id="waLink" href="#">Send ticket on WhatsApp</a>
+    <div class="row" style="margin-top:10px"><button class="btn bo" onclick="copyId()">Copy ID</button><a class="btn bo" href="tel:+918299087647">Call support</a></div>
+    <button class="btn bo" style="width:100%;margin-top:10px" onclick="newTicket()">Raise another ticket</button>
+  </div>
+  <div class="hist" id="hist"></div>
+</section>
+
+<!-- CONTACT -->
+<section class="page" id="contact">
+  <h2 style="margin-top:4px">Free consultation</h2>
+  <p class="sub">Firewall, campus Wi‑Fi, servers, CCTV or a complete IT setup — tell us what you need.</p>
+  <div class="row"><a class="btn bn" href="tel:+918299087647">📞 Call</a><a class="btn bw" href="https://wa.me/918299087647">WhatsApp</a></div>
+  <div class="row" style="margin-top:10px"><a class="btn bo" href="mailto:info@getitsolutions.in">✉️ Email</a><a class="btn bo" href="https://getitsolutions.in">🌐 Website</a></div>
+  <form id="quote" class="card" style="margin-top:14px">
+    <label>Full name *</label><input name="name" required>
+    <label>Organisation</label><input name="org">
+    <label>Phone *</label><input name="phone" type="tel" required inputmode="tel">
+    <label>Requirement</label>
+    <select name="req" id="reqSel"><option>Sophos Firewall</option><option>Sophos Endpoint / EDR / MDR</option><option>Quantum Networks Wi‑Fi & Switching</option><option>Wi‑Fi 7 / Network Upgrade</option><option>Server & Storage</option><option>Backup & Disaster Recovery</option><option>CCTV / AI Video Analytics</option><option>Structured Cabling</option><option>Cloud / Microsoft 365</option><option>Software Development</option><option>24/7 IT Support / AMC</option><option>Other</option></select>
+    <label>Message</label><textarea name="msg" rows="3"></textarea>
+    <button class="btn bn" style="width:100%;margin-top:16px" type="submit">Send request on WhatsApp</button>
+  </form>
+  <div class="card" style="margin-top:14px;font-size:13px;line-height:1.7">
+    <b>Get IT Solutions</b><br>Lucknow, Uttar Pradesh 226021<br>+91 82990 87647<br>
+    <a href="https://www.linkedin.com/in/get-it-solutions">LinkedIn</a> · <a href="https://www.facebook.com/InfoGetITSolutions/">Facebook</a> · <a href="https://x.com/GETITSOLUTIONS2">X</a>
+  </div>
+  <p style="text-align:center;font-size:11px;color:var(--mute);margin-top:16px">© 2026 Get IT Solutions. All brand names are trademarks of their respective owners.</p>
+</section>
+</main>
+
+<nav id="nav">
+  <button data-p="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button data-p="services"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Services</button>
+  <button data-p="support"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="6" rx="1.5"/><rect x="17" y="14" width="5" height="6" rx="1.5"/></svg>Support</button>
+  <button data-p="brands"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21l1.5-7L2 9.3l7-.8z"/></svg>Brands</button>
+  <button data-p="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Contact</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+var WA='918299087647';
+var svcs=[
+ ['📶','Wired & Wireless Network','Professional Wi‑Fi, structured cabling and switching built around your site.','Quantum Networks Wi‑Fi & Switching'],
+ ['🛡️','Firewall & Cybersecurity','Next-gen firewalls and endpoint protection against modern cyber threats.','Sophos Firewall'],
+ ['🗄️','Server & Storage','Servers, NAS/SAN storage and backup — sized for today, scalable for tomorrow.','Server & Storage'],
+ ['📹','CCTV Surveillance','HD and AI-enabled CCTV with remote viewing and real-time alerts.','CCTV / AI Video Analytics'],
+ ['☁️','Cloud Computing','Cloud migration, Microsoft 365 and hybrid cloud with immutable backup.','Cloud / Microsoft 365'],
+ ['💻','Software Development','Custom web, mobile and desktop applications for your workflows.','Software Development'],
+ ['🚀','Wi‑Fi 7 & Multi-Gig','Next-gen wireless with multi-gig and PoE++ switching.','Wi‑Fi 7 / Network Upgrade'],
+ ['🤖','AI-Driven Threat Defence','Sophos XDR & 24/7 MDR that catch ransomware rule-based tools miss.','Sophos Endpoint / EDR / MDR'],
+ ['🔐','Biometric & Access Control','Fingerprint, face and card attendance and door access.','Other'],
+ ['🔌','Structured Cabling','Certified Cat6 and fibre cabling with racks and patch panels.','Structured Cabling'],
+ ['☎️','IP Telephony & VC','IP-PBX, IP phones and meeting-room video conferencing.','Other'],
+ ['🧰','AMC & 24/7 IT Support','Annual maintenance with remote and on-site support.','24/7 IT Support / AMC']
+];
+var brands=[
+ ['Sophos','Firewall, endpoint, MDR & Secureworks XDR','SECURITY','https://www.sophos.com'],
+ ['Fortinet','FortiGate next-gen firewalls & SD-WAN','SECURITY','https://www.fortinet.com'],
+ ['Seqrite','Endpoint security & data protection','SECURITY','https://www.seqrite.com'],
+ ['Cisco','Routing, switching & collaboration','NETWORKING','https://www.cisco.com'],
+ ['Cisco Meraki','Cloud-managed Wi‑Fi, switches & security','NETWORKING','https://meraki.cisco.com'],
+ ['HPE Aruba Networking','Enterprise Wi‑Fi & campus switching','NETWORKING','https://www.arubanetworks.com'],
+ ['Quantum Networks','Enterprise Wi‑Fi, switches & gateways','NETWORKING','https://www.qntmnet.com'],
+ ['Grandstream','IP phones, IP-PBX & video conferencing','UC & AV','https://www.grandstream.com'],
+ ['PeopleLink','Video conferencing cameras & rooms','UC & AV','https://www.peoplelinkvc.com'],
+ ['HPE','ProLiant servers & enterprise storage','COMPUTE','https://www.hpe.com'],
+ ['Dell Technologies','Servers, storage, desktops & laptops','COMPUTE','https://www.dell.com'],
+ ['Tyrone (Netweb)','Make-in-India servers, storage & HPC','COMPUTE','https://tyronesystems.com'],
+ ['CommScope','Structured cabling & fibre','CABLING','https://www.commscope.com'],
+ ['Molex','Copper & fibre cabling','CABLING','https://www.molex.com'],
+ ['Hikvision','IP cameras, NVRs & video security','SURVEILLANCE','https://www.hikvision.com'],
+ ['Prama India','Make-in-India CCTV & surveillance','SURVEILLANCE','https://www.pramaindia.in'],
+ ['Honeywell','Security, access control & fire safety','SURVEILLANCE','https://www.honeywell.com'],
+ ['Microsoft','Microsoft 365, Windows & Azure','SOFTWARE','https://www.microsoft.com'],
+ ['Zoho','Zoho Mail, Workplace & business apps','SOFTWARE','https://www.zoho.com'],
+ ['Sony','Professional displays & projectors','UC & AV','https://www.sony.co.in'],
+ ['Samsung','Commercial displays & video walls','UC & AV','https://www.samsung.com/in/business/'],
+ ['LG','Commercial displays & signage','UC & AV','https://www.lg.com/in/business'],
+ ['TVS Electronics','Printers, keyboards & POS devices','PERIPHERALS','https://www.tvs-e.in']
+];
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function go(p){document.querySelectorAll('.page').forEach(function(s){s.classList.toggle('on',s.id===p)});
+ document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.p===p)});window.scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){go(b.dataset.p)}});
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},1800)}
+function openUrl(u){ if(window.Android&&Android.open){Android.open(u)} else {window.open(u,'_blank')} }
+document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href');
+ if(/^(https?:|tel:|mailto:)/.test(h)){e.preventDefault();openUrl(h)}});
+$('svcMini').innerHTML=svcs.slice(0,6).map(function(s,i){return '<div class="card" onclick="quote('+i+')"><div class="ic">'+s[0]+'</div><h3>'+s[1]+'</h3><p>'+s[2]+'</p></div>'}).join('');
+$('svcList').innerHTML=svcs.map(function(s,i){return '<div class="card" onclick="quote('+i+')"><div class="ic">'+s[0]+'</div><div><h3>'+s[1]+'</h3><p>'+s[2]+'</p><p style="color:#1a4a85;font-weight:600;margin-top:6px">Get a quote →</p></div></div>'}).join('');
+function quote(i){go('contact');$('reqSel').value=svcs[i][3]}
+var cats=['ALL'];brands.forEach(function(b){if(cats.indexOf(b[2])<0)cats.push(b[2])});
+function showBrands(c){$('cats').innerHTML=cats.map(function(x){return '<button class="chip'+(x===c?' on':'')+'" onclick="showBrands(\''+x+'\')">'+x+'</button>'}).join('');
+ $('brandList').innerHTML=brands.filter(function(b){return c==='ALL'||b[2]===c}).map(function(b){return '<a class="brand" href="'+b[3]+'"><div><b>'+b[0]+'</b><small>'+b[1]+'</small></div><i>'+b[2]+'</i></a>'}).join('')}
+showBrands('ALL');
+var words=['Cybersecurity','Networking','Servers & Storage','Cloud & Backup'],wi=0;
+setInterval(function(){wi=(wi+1)%words.length;$('rot').textContent=words[wi]},2200);
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'[]');localStorage.setItem(k,JSON.stringify(v))}catch(e){return []}}
+function renderHist(){var h=store('gis_tickets');if(!h.length){$('hist').innerHTML='';return}
+ $('hist').innerHTML='<h2>My tickets</h2>'+h.slice(0,10).map(function(t){return '<div class="card"><div><b>'+esc(t.id)+'</b><div style="font-size:12px;color:var(--mute)">'+esc(t.issue)+' · '+esc(t.date)+'</div></div><span class="pill">'+esc(t.priority.split(' ')[0])+'</span></div>'}).join('')}
+renderHist();
+$('ticket').onsubmit=function(e){e.preventDefault();var f=new FormData(this),d={};f.forEach(function(v,k){d[k]=v.trim()});
+ var n=new Date(),p=function(x){return('0'+x).slice(-2)};
+ var id='GIS-'+String(n.getFullYear()).slice(2)+p(n.getMonth()+1)+p(n.getDate())+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+ var msg='*New Support Ticket*\nCase ID: '+id+'\nName: '+d.name+(d.org?'\nOrganisation: '+d.org:'')+'\nWhatsApp: '+d.phone+(d.email?'\nEmail: '+d.email:'')+'\nIssue: '+d.issue+'\nPriority: '+d.priority+(d.site?'\nSite: '+d.site:'')+'\nProblem: '+d.desc+'\n(Sent from Get IT Solutions app)';
+ $('caseId').textContent=id;$('waLink').setAttribute('href','https://wa.me/'+WA+'?text='+encodeURIComponent(msg));
+ var h=store('gis_tickets');h.unshift({id:id,issue:d.issue,priority:d.priority,date:n.toLocaleDateString('en-IN')});store('gis_tickets',h.slice(0,30));
+ $('tForm').style.display='none';$('tOk').classList.add('on');renderHist();window.scrollTo(0,0)};
+function newTicket(){$('ticket').reset();$('tForm').style.display='';$('tOk').classList.remove('on')}
+function copyId(){var t=$('caseId').textContent;if(window.Android&&Android.copy){Android.copy(t)}else if(navigator.clipboard){navigator.clipboard.writeText(t)}toast('Case ID copied')}
+$('quote').onsubmit=function(e){e.preventDefault();var f=new FormData(this),d={};f.forEach(function(v,k){d[k]=v.trim()});
+ var msg='*Consultation Request*\nName: '+d.name+(d.org?'\nOrganisation: '+d.org:'')+'\nPhone: '+d.phone+'\nRequirement: '+d.req+(d.msg?'\nMessage: '+d.msg:'')+'\n(Sent from Get IT Solutions app)';
+ openUrl('https://wa.me/'+WA+'?text='+encodeURIComponent(msg))};
+</script>
+</body>
+</html>
