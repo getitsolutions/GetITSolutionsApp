@@ -14,6 +14,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class MainActivity extends Activity {
     private WebView web;
 
@@ -54,6 +60,36 @@ public class MainActivity extends Activity {
     }
 
     class Bridge {
+        // Fetches data from getitsolutions.in only (e.g. events.php) and hands the text to a JS callback.
+        @JavascriptInterface public void get(final String url, final String cb) {
+            if (url == null || !url.startsWith("https://getitsolutions.in/") || cb == null || !cb.matches("[A-Za-z_][A-Za-z0-9_]*")) return;
+            new Thread(() -> {
+                String body = null;
+                HttpURLConnection c = null;
+                try {
+                    c = (HttpURLConnection) new URL(url).openConnection();
+                    c.setConnectTimeout(10000);
+                    c.setReadTimeout(15000);
+                    c.setUseCaches(false);
+                    c.setRequestProperty("Accept", "application/json");
+                    if (c.getResponseCode() == 200) {
+                        InputStream in = c.getInputStream();
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        byte[] buf = new byte[8192];
+                        int n;
+                        while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
+                        in.close();
+                        body = out.toString("UTF-8");
+                    }
+                } catch (Exception ignored) {
+                } finally {
+                    if (c != null) c.disconnect();
+                }
+                final String js = cb + "(" + (body == null ? "null" : JSONObject.quote(body)) + ")";
+                runOnUiThread(() -> web.evaluateJavascript(js, null));
+            }).start();
+        }
+
         @JavascriptInterface public void open(String url) { runOnUiThread(() -> openExternal(url)); }
         @JavascriptInterface public void copy(String text) {
             runOnUiThread(() -> {
@@ -67,7 +103,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        web.evaluateJavascript("(function(){var p=document.querySelector('.page.on');if(p&&p.id!=='home'){go('home');return 1}return 0})()",
+        web.evaluateJavascript("backHandler()",
             r -> { if (!"1".equals(r)) MainActivity.super.onBackPressed(); });
     }
 }
