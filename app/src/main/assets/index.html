@@ -77,6 +77,9 @@ nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
 .teaser img{width:72px;height:72px;border-radius:10px;object-fit:cover;flex:none;background:#E6ECF5}
 .teaser b{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .toast.on{opacity:1}
+.msg{border-radius:10px;padding:11px 13px;font-size:13px;margin-top:12px;line-height:1.5}.msg.ok{background:#E8F8EE;color:#11663a}.msg.bad{background:#FDECEE;color:#A3141F}
+.btn[disabled]{opacity:.6}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 </style>
 </head>
 <body>
@@ -162,7 +165,9 @@ nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
       <select name="priority"><option>Normal</option><option>High – work affected</option><option>Critical – business stopped</option></select>
       <label>Site / location</label><input name="site">
       <label>Describe the problem *</label><textarea name="desc" rows="4" required></textarea>
-      <button class="btn bn" style="width:100%;margin-top:16px" type="submit">Create ticket & get case ID</button>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="msg bad" id="tErr" hidden></div>
+      <button class="btn bn" id="tBtn" style="width:100%;margin-top:16px" type="submit">Create ticket & get case ID</button>
     </form>
   </div>
   <div class="ok card" id="tOk">
@@ -170,7 +175,7 @@ nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
     <h2 style="margin:6px 0 0">Ticket created</h2>
     <p class="sub" style="margin:4px 0 0">Your case ID is</p>
     <div class="case" id="caseId"></div>
-    <p style="font-size:13px;color:var(--mute);margin:0 0 14px">Press <b>Send</b> on WhatsApp so our team receives it with all details.</p>
+    <p id="tOkMsg" style="font-size:13px;color:var(--mute);margin:0 0 14px"></p>
     <a class="btn bw" id="waLink" href="#">Send ticket on WhatsApp</a>
     <div class="row" style="margin-top:10px"><button class="btn bo" onclick="copyId()">Copy ID</button><a class="btn bo" href="tel:+918299087647">Call support</a></div>
     <button class="btn bo" style="width:100%;margin-top:10px" onclick="newTicket()">Raise another ticket</button>
@@ -188,10 +193,21 @@ nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
     <label>Full name *</label><input name="name" required>
     <label>Organisation</label><input name="org">
     <label>Phone *</label><input name="phone" type="tel" required inputmode="tel">
+    <label>Email</label><input name="email" type="email">
     <label>Requirement</label>
     <select name="req" id="reqSel"><option>Sophos Firewall</option><option>Sophos Endpoint / EDR / MDR</option><option>Quantum Networks Wi‑Fi & Switching</option><option>Wi‑Fi 7 / Network Upgrade</option><option>Server & Storage</option><option>Backup & Disaster Recovery</option><option>CCTV / AI Video Analytics</option><option>Structured Cabling</option><option>Cloud / Microsoft 365</option><option>Software Development</option><option>24/7 IT Support / AMC</option><option>Other</option></select>
     <label>Message</label><textarea name="msg" rows="3"></textarea>
-    <button class="btn bn" style="width:100%;margin-top:16px" type="submit">Send request on WhatsApp</button>
+    <div class="msg" id="qMsg" hidden></div>
+    <button class="btn bn" id="qBtn" style="width:100%;margin-top:16px" type="submit">Request free consultation</button>
+    <a class="btn bw" id="qWa" href="#" style="margin-top:10px;display:none">Send on WhatsApp instead</a>
+  </form>
+  <h2>Share your feedback</h2><p class="sub">Tell others about your experience. It appears on our website after a quick review.</p>
+  <form id="fbForm" class="card">
+    <label>Your name *</label><input name="name" required maxlength="80">
+    <label>Your feedback *</label><textarea name="message" rows="3" required maxlength="1000"></textarea>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div class="msg" id="fbMsg" hidden></div>
+    <button class="btn bn" id="fbBtn" style="width:100%;margin-top:16px" type="submit">Submit feedback</button>
   </form>
   <div class="card" style="margin-top:14px;font-size:13px;line-height:1.7">
     <b>Get IT Solutions</b><br>Lucknow, Uttar Pradesh 226021<br>+91 82990 87647<br>
@@ -280,18 +296,42 @@ function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(
 function renderHist(){var h=store('gis_tickets');if(!h.length){$('hist').innerHTML='';return}
  $('hist').innerHTML='<h2>My tickets</h2>'+h.slice(0,10).map(function(t){return '<div class="card"><div><b>'+esc(t.id)+'</b><div style="font-size:12px;color:var(--mute)">'+esc(t.issue)+' · '+esc(t.date)+'</div></div><span class="pill">'+esc(t.priority.split(' ')[0])+'</span></div>'}).join('')}
 renderHist();
-$('ticket').onsubmit=function(e){e.preventDefault();var f=new FormData(this),d={};f.forEach(function(v,k){d[k]=v.trim()});
- var n=new Date(),p=function(x){return('0'+x).slice(-2)};
- var id='GIS-'+String(n.getFullYear()).slice(2)+p(n.getMonth()+1)+p(n.getDate())+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
- var msg='*New Support Ticket*\nCase ID: '+id+'\nName: '+d.name+(d.org?'\nOrganisation: '+d.org:'')+'\nWhatsApp: '+d.phone+(d.email?'\nEmail: '+d.email:'')+'\nIssue: '+d.issue+'\nPriority: '+d.priority+(d.site?'\nSite: '+d.site:'')+'\nProblem: '+d.desc+'\n(Sent from Get IT Solutions app)';
- $('caseId').textContent=id;$('waLink').setAttribute('href','https://wa.me/'+WA+'?text='+encodeURIComponent(msg));
- var h=store('gis_tickets');h.unshift({id:id,issue:d.issue,priority:d.priority,date:n.toLocaleDateString('en-IN')});store('gis_tickets',h.slice(0,30));
- $('tForm').style.display='none';$('tOk').classList.add('on');renderHist();window.scrollTo(0,0)};
+// ---- Server calls to getitsolutions.in (same backend as the website, so alerts go out the same way) ----
+var API='https://getitsolutions.in/',_cbn=0;
+function postJSON(path,data,done){var url=API+path,body=JSON.stringify(data);
+ if(window.Android&&Android.post){var cb='_cb'+(++_cbn);window[cb]=function(res){delete window[cb];var r=null;try{r=JSON.parse(res)}catch(e){}
+   var j=null;if(r&&r.body){try{j=JSON.parse(r.body)}catch(e){}}done(r?r.status:0,j)};Android.post(url,body,cb);return}
+ fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:body}).then(function(r){return r.json().then(function(j){done(r.status,j)},function(){done(r.status,null)})}).catch(function(){done(0,null)})}
+function msg(id,t,bad){var e=$(id);e.textContent=t;e.className='msg '+(bad?'bad':'ok');e.hidden=false}
+function busy(btn,on,txt){var b=$(btn);if(on){b.dataset.t=b.textContent;b.textContent=txt||'Sending…';b.disabled=true}else{b.textContent=b.dataset.t||b.textContent;b.disabled=false}}
+function localId(){var n=new Date(),p=function(x){return('0'+x).slice(-2)};return 'GIS-'+String(n.getFullYear()).slice(2)+p(n.getMonth()+1)+p(n.getDate())+'-'+Math.random().toString(36).slice(2,6).toUpperCase()}
+$('ticket').onsubmit=function(e){e.preventDefault();var f=new FormData(this),d={};f.forEach(function(v,k){d[k]=String(v).trim()});
+ if(d.phone.replace(/\D/g,'').length<10){msg('tErr','Please add a valid WhatsApp number.',1);return}
+ $('tErr').hidden=true;busy('tBtn',1,'Creating ticket…');
+ postJSON('support.php',{name:d.name,org:d.org,phone:d.phone,email:d.email,category:d.issue,priority:d.priority,location:d.site,problem:d.desc,website:d.website||''},function(st,j){busy('tBtn',0);
+  if(st===422||st===429){msg('tErr',(j&&j.error)||'Please check the form and try again.',1);return}
+  var server=!!(j&&j.ok&&j.caseId),id=server?j.caseId:localId(),n=new Date();
+  var lines=['*New Support Ticket*','Case ID: *'+id+'*','Priority: '+d.priority,'Issue: '+d.issue,'','Name: '+d.name];
+  if(d.org)lines.push('Organisation: '+d.org);lines.push('WhatsApp: '+d.phone.replace(/[^0-9+]/g,''));if(d.email)lines.push('Email: '+d.email);if(d.site)lines.push('Location: '+d.site);
+  lines.push('','Problem: '+d.desc,'','Submitted: '+n.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})+' (Get IT Solutions app)');
+  $('caseId').textContent=id;$('waLink').setAttribute('href','https://wa.me/'+WA+'?text='+encodeURIComponent(lines.join('\n')));
+  $('tOkMsg').innerHTML=server?'Our support team has been alerted and will contact you shortly. For faster help, also send it on WhatsApp — just press <b>Send</b>.':'We could not reach our server right now. Please press <b>Send</b> on WhatsApp so our team receives your ticket.';
+  var h=store('gis_tickets');h.unshift({id:id,issue:d.issue,priority:d.priority,date:n.toLocaleDateString('en-IN')});store('gis_tickets',h.slice(0,30));
+  $('tForm').style.display='none';$('tOk').classList.add('on');renderHist();window.scrollTo(0,0)})};
 function newTicket(){$('ticket').reset();$('tForm').style.display='';$('tOk').classList.remove('on')}
 function copyId(){var t=$('caseId').textContent;if(window.Android&&Android.copy){Android.copy(t)}else if(navigator.clipboard){navigator.clipboard.writeText(t)}toast('Case ID copied')}
-$('quote').onsubmit=function(e){e.preventDefault();var f=new FormData(this),d={};f.forEach(function(v,k){d[k]=v.trim()});
- var msg='*Consultation Request*\nName: '+d.name+(d.org?'\nOrganisation: '+d.org:'')+'\nPhone: '+d.phone+'\nRequirement: '+d.req+(d.msg?'\nMessage: '+d.msg:'')+'\n(Sent from Get IT Solutions app)';
- openUrl('https://wa.me/'+WA+'?text='+encodeURIComponent(msg))};
+$('quote').onsubmit=function(e){e.preventDefault();var form=this,f=new FormData(form),d={};f.forEach(function(v,k){d[k]=String(v).trim()});
+ var wa='*Consultation Request*\nName: '+d.name+(d.org?'\nOrganisation: '+d.org:'')+'\nPhone: '+d.phone+(d.email?'\nEmail: '+d.email:'')+'\nRequirement: '+d.req+(d.msg?'\nMessage: '+d.msg:'')+'\n(Sent from Get IT Solutions app)';
+ $('qWa').setAttribute('href','https://wa.me/'+WA+'?text='+encodeURIComponent(wa));
+ if(d.phone.replace(/\D/g,'').length<10){msg('qMsg','Please add a valid phone number.',1);return}
+ busy('qBtn',1);$('qWa').style.display='none';
+ postJSON('support.php',{type:'consultation',name:d.name,org:d.org,phone:d.phone,email:d.email,category:d.req,problem:d.msg,priority:'Normal'},function(st,j){busy('qBtn',0);
+  if(j&&j.ok){msg('qMsg','Thank you! Your request '+(j.caseId||'')+' has been received. Our team will contact you shortly.');form.reset()}
+  else{msg('qMsg',(j&&j.error)||'Could not send right now. Please send it on WhatsApp or call +91 82990 87647.',1);$('qWa').style.display='block'}})};
+$('fbForm').onsubmit=function(e){e.preventDefault();var form=this,f=new FormData(form),d={};f.forEach(function(v,k){d[k]=String(v).trim()});
+ busy('fbBtn',1);postJSON('feedback.php',{name:d.name,message:d.message,website:d.website||''},function(st,j){busy('fbBtn',0);
+  if(j&&j.ok){form.reset();msg('fbMsg','Thank you! Your feedback has been received and will appear after review.')}
+  else msg('fbMsg',(j&&j.error)||'Could not post feedback right now. Please try again later.',1)})};
 // ---- Events: live from getitsolutions.in/events.php ----
 var EV_BASE='https://getitsolutions.in',EV_URL=EV_BASE+'/events.php',evItems=[],evFilter='all',CATN={award:'Award',event:'Event',news:'News'};
 function evImg(p){return p&&p.src?(/^https?:/.test(p.src)?p.src:EV_BASE+p.src):''}
