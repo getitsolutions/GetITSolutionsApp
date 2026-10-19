@@ -361,9 +361,11 @@ function openEv(i){var e=evItems[i];if(!e)return;var ph=e.photos||[];
  $('dGal').innerHTML=ph.map(function(p){return '<img loading="lazy" src="'+esc(evImg(p))+'" alt="">'}).join('');$('dGal').style.display=ph.length?'':'none';
  $('dTxt').textContent=e.description||'';$('evDlg').classList.add('on');$('evDlg').scrollTop=0}
 function closeEv(){$('evDlg').classList.remove('on')}
-function backHandler(){if($('evDlg').classList.contains('on')){closeEv();return 1}var p=document.querySelector('.page.on');if(p&&p.id!=='home'){go('home');return 1}return 0}
+function backHandler(){var gd=document.getElementById('gd-ov');if(gd&&gd.classList.contains('on')&&window.GISDussehra){GISDussehra.close();return 1}if($('evDlg').classList.contains('on')){closeEv();return 1}var p=document.querySelector('.page.on');if(p&&p.id!=='home'){go('home');return 1}return 0}
 (function(){var c=null;try{c=localStorage.getItem('gis_events')}catch(e){}if(c)onEvents(c,true);loadEvents()})();
 document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('click',function(){if(b.dataset.p==='events'&&evItems.length===0)loadEvents()})});
 </script>
+<script>window.GIS_DUSSEHRA={pillBottom:84};</script>
+<script src="dussehra.js" defer></script>
 </body>
 </html>
