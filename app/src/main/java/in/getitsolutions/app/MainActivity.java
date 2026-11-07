@@ -203,6 +203,15 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface public void open(String url) { runOnUiThread(() -> openExternal(url)); }
+        // Share a news item (or any text) through the phone's share menu – WhatsApp, email, etc.
+        @JavascriptInterface public void share(final String text) {
+            runOnUiThread(() -> {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, text);
+                try { startActivity(Intent.createChooser(i, "Share via")); } catch (Exception e) { Toast.makeText(MainActivity.this, "No app found to share", Toast.LENGTH_SHORT).show(); }
+            });
+        }
         // "← Back" on the support chat page: return to the app's home screen
         @JavascriptInterface public void home() { runOnUiThread(() -> web.loadUrl("file:///android_asset/index.html")); }
         @JavascriptInterface public void copy(String text) {
