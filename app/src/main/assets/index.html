@@ -376,11 +376,37 @@ function openEv(i){var e=evItems[i];if(!e)return;var ph=e.photos||[];
  $('dGal').innerHTML=ph.map(function(p){return '<img loading="lazy" src="'+esc(evImg(p))+'" alt="">'}).join('');$('dGal').style.display=ph.length?'':'none';
  $('dTxt').textContent=e.description||'';$('evDlg').classList.add('on');$('evDlg').scrollTop=0}
 function closeEv(){$('evDlg').classList.remove('on')}
-function backHandler(){var gd=document.getElementById('gd-ov');if(gd&&gd.classList.contains('on')&&window.GISDussehra){GISDussehra.close();return 1}if($('evDlg').classList.contains('on')){closeEv();return 1}var p=document.querySelector('.page.on');if(p&&p.id!=='home'){go('home');return 1}return 0}
+function backHandler(){if(window.greetClose&&greetClose())return 1;var gd=document.getElementById('gd-ov');if(gd&&gd.classList.contains('on')&&window.GISDussehra){GISDussehra.close();return 1}if($('evDlg').classList.contains('on')){closeEv();return 1}var p=document.querySelector('.page.on');if(p&&p.id!=='home'){go('home');return 1}return 0}
 (function(){var c=null;try{c=localStorage.getItem('gis_events')}catch(e){}if(c)onEvents(c,true);loadEvents()})();
 document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('click',function(){if(b.dataset.p==='events'&&evItems.length===0)loadEvents()})});
 </script>
 <script>window.GIS_DUSSEHRA={pillBottom:84};</script>
 <script src="dussehra.js" defer></script>
+<script>
+/* Festival greeting – the same card the website shows (Admin → Greetings & Holidays), once a day per greeting */
+(function(){
+ var SITE='https://getitsolutions.in';
+ function st(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+ function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+ window.onGreet=function(txt){var j=null;try{j=JSON.parse(txt)}catch(e){}if(!j||!j.item)return;var g=j.item,key='gisGreet:'+g.id;if(st(key)===today())return;setTimeout(function(){greetOpen(g,key)},900)};
+ window.greetClose=function(){var w=document.getElementById('gGreet');if(!w)return 0;w.remove();return 1};
+ function greetOpen(g,key){
+  var css=document.createElement('style');css.textContent='#gGreet{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(6,19,42,.75)}#gGreet .b{position:relative;width:100%;max-width:480px;max-height:calc(100vh - 28px);overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.4)}#gGreet img.c{display:block;width:100%;height:auto;border-radius:18px 18px 0 0}#gGreet .x{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(6,19,42,.8);color:#fff;font-size:22px}#gGreet .t{padding:12px 16px 16px;text-align:center}#gGreet .hi{margin:0;font-weight:700;color:#0B2A5B;font-size:17px}#gGreet .r{display:flex;gap:10px;justify-content:center;margin-top:10px}#gGreet .r button{flex:1;min-height:44px;border-radius:10px;border:1px solid #E1E7F0;background:#fff;font:600 14px inherit;color:#0B2A5B}#gGreet .r button.p{background:#1A63E0;border-color:#1A63E0;color:#fff}#gGreet .card{padding:30px 20px;text-align:center;background:linear-gradient(160deg,#0B2A5B,#1A63E0 60%,#14C9A8);color:#fff;border-radius:18px 18px 0 0}#gGreet .card b{display:block;font-size:30px;margin:6px 0 10px}';
+  document.head.appendChild(css);
+  var w=document.createElement('div');w.id='gGreet';var title=g.title||g.name||'Season’s Greetings';
+  var media=g.image?'<img class="c" alt="" src="'+SITE+g.image+'">':'<div class="card"><i></i><b></b><p></p></div>';
+  w.innerHTML='<div class="b" role="dialog" aria-modal="true">'+media+'<button class="x" aria-label="Close">×</button><div class="t">'+(g.hindi?'<p class="hi" lang="hi"></p>':'')+'<div class="r"><button class="s">Share on WhatsApp</button><button class="p">Thank you!</button></div></div></div>';
+  if(!g.image){w.querySelector('.card i').textContent=g.kicker||'';w.querySelector('.card b').textContent=title;w.querySelector('.card p').textContent=g.message||''}
+  if(g.hindi)w.querySelector('.hi').textContent=g.hindi;
+  var img=w.querySelector('img.c');if(img)img.alt=title+' – '+(g.message||'Warm wishes from Get IT Solutions');
+  w.querySelector('.x').onclick=w.querySelector('.p').onclick=greetClose;
+  w.onclick=function(e){if(e.target===w)greetClose()};
+  w.querySelector('.s').onclick=function(){var u='https://wa.me/?text='+encodeURIComponent(title+'! '+(g.message||'')+' – Get IT Solutions '+SITE+'/');if(window.Android&&Android.open)Android.open(u);else window.open(u)};
+  document.body.appendChild(w);st(key,today());
+ }
+ if(window.Android&&Android.get)Android.get(SITE+'/greetings.php','onGreet');
+ else fetch(SITE+'/greetings.php').then(function(r){return r.text()}).then(onGreet).catch(function(){});
+})();
+</script>
 </body>
 </html>
