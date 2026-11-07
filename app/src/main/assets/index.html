@@ -58,6 +58,8 @@ nav button svg{display:block;margin:0 auto 3px;width:22px;height:22px}
 nav button{font-size:10.5px}
 nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
 .toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:20px;font-size:13px;opacity:0;transition:.3s;pointer-events:none}
+.aiCard{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;border-radius:14px;padding:14px 16px;border:1px solid var(--line);background:#fff;font:inherit;color:inherit;margin-bottom:10px;cursor:pointer}
+.aiCard b{font-size:15px}.aiCard span{font-size:13px;line-height:1.5;color:var(--mute)}.aiCard.p{background:linear-gradient(135deg,#1A63E0,#1D4C8F);border-color:#1A63E0;color:#fff}.aiCard.p span{color:#E3EBF6}
 .ev{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:12px;cursor:pointer}
 .ev img{width:100%;height:190px;object-fit:cover;display:block;background:#E6ECF5}
 .ev .bd{padding:12px 14px}.ev h3{font-size:15px;margin:6px 0 4px;line-height:1.35}.ev p{font-size:12.5px;color:var(--mute);margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -176,6 +178,12 @@ nav button.on{color:var(--navy)}nav button.on svg{color:#1a4a85}
     <p class="sub" style="margin:4px 0 0">Your case ID is</p>
     <div class="case" id="caseId"></div>
     <p id="tOkMsg" style="font-size:13px;color:var(--mute);margin:0 0 14px"></p>
+    <div id="aiOpt" hidden style="text-align:left;margin:0 0 14px">
+      <p style="margin:0 0 10px;font-weight:700;font-size:15px;text-align:center">How would you like help?</p>
+      <button type="button" class="aiCard p" onclick="aiChat()"><b>⚡ Chat with Gia now</b><span id="aiSub">Our virtual support engineer helps you fix it right away, step by step.</span></button>
+      <button type="button" class="aiCard" onclick="aiWait()"><b>📞 Wait for engineer’s call</b><span>Our engineer will call you on your WhatsApp number.</span></button>
+      <p class="msg ok" id="aiNote" hidden style="margin-top:10px"></p>
+    </div>
     <a class="btn bw" id="waLink" href="#">Send ticket on WhatsApp</a>
     <div class="row" style="margin-top:10px"><button class="btn bo" onclick="copyId()">Copy ID</button><a class="btn bo" href="tel:+918299087647">Call support</a></div>
     <button class="btn bo" style="width:100%;margin-top:10px" onclick="newTicket()">Raise another ticket</button>
@@ -318,8 +326,14 @@ $('ticket').onsubmit=function(e){e.preventDefault();var f=new FormData(this),d={
   $('caseId').textContent=id;$('waLink').setAttribute('href','https://wa.me/'+WA+'?text='+encodeURIComponent(lines.join('\n')));
   $('tOkMsg').innerHTML=server?'Our support team has been alerted and will contact you shortly. For faster help, also send it on WhatsApp — just press <b>Send</b>.':'We could not reach our server right now. Please press <b>Send</b> on WhatsApp so our team receives your ticket.';
   var h=store('gis_tickets');h.unshift({id:id,issue:d.issue,priority:d.priority,date:n.toLocaleDateString('en-IN')});store('gis_tickets',h.slice(0,30));
+  AI=(server&&j.aiToken)?{c:id,t:j.aiToken,n:d.name,k:d.issue,l:j.aiLive?'1':''}:null;
+  $('aiOpt').hidden=!AI;$('aiNote').hidden=true;if(AI)$('aiSub').textContent=AI.l?'Our virtual support engineer chats with you right away and helps you fix it.':'Our virtual support engineer guides you step by step to fix it.';
   $('tForm').style.display='none';$('tOk').classList.add('on');renderHist();window.scrollTo(0,0)})};
-function newTicket(){$('ticket').reset();$('tForm').style.display='';$('tOk').classList.remove('on')}
+// After a ticket: the same choice as on the website – chat with Gia (opens our website's chat inside the app) or wait for the engineer's call
+var AI=null;
+function aiChat(){if(!AI)return;location.href=API+'ai-chat.html#c='+encodeURIComponent(AI.c)+'&t='+encodeURIComponent(AI.t)+'&n='+encodeURIComponent(AI.n||'')+'&k='+encodeURIComponent(AI.k||'')+'&l='+AI.l+'&go=chat'}
+function aiWait(){if(!AI)return;postJSON('ai-support.php',{case:AI.c,token:AI.t,action:'start',choice:'wait'},function(){});var n=$('aiNote');n.textContent='Thank you. Our engineer will call you shortly. For urgent help call +91 82990 87647. You can still chat with Gia while you wait.';n.hidden=false}
+function newTicket(){$('ticket').reset();$('tForm').style.display='';$('tOk').classList.remove('on');AI=null;$('aiOpt').hidden=true}
 function copyId(){var t=$('caseId').textContent;if(window.Android&&Android.copy){Android.copy(t)}else if(navigator.clipboard){navigator.clipboard.writeText(t)}toast('Case ID copied')}
 $('quote').onsubmit=function(e){e.preventDefault();var form=this,f=new FormData(form),d={};f.forEach(function(v,k){d[k]=String(v).trim()});
  var wa='*Consultation Request*\nName: '+d.name+(d.org?'\nOrganisation: '+d.org:'')+'\nPhone: '+d.phone+(d.email?'\nEmail: '+d.email:'')+'\nRequirement: '+d.req+(d.msg?'\nMessage: '+d.msg:'')+'\n(Sent from Get IT Solutions app)';

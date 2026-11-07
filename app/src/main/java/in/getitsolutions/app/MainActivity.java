@@ -39,7 +39,8 @@ public class MainActivity extends Activity {
     private GeolocationPermissions.Callback geoCb;
     private String geoOrigin;
 
-    private static boolean isAdmin(String u) { return u != null && (u.startsWith(ADMIN) || u.equals("https://getitsolutions.in/admin")); }
+    private static final String AICHAT = "https://getitsolutions.in/ai-chat.html";   // Gia support chat after a ticket (same as the website)
+    private static boolean isAdmin(String u) { return u != null && (u.startsWith(ADMIN) || u.equals("https://getitsolutions.in/admin") || u.startsWith(AICHAT)); }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +203,8 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface public void open(String url) { runOnUiThread(() -> openExternal(url)); }
+        // "← Back" on the support chat page: return to the app's home screen
+        @JavascriptInterface public void home() { runOnUiThread(() -> web.loadUrl("file:///android_asset/index.html")); }
         @JavascriptInterface public void copy(String text) {
             runOnUiThread(() -> {
                 ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
